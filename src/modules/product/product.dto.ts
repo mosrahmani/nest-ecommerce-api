@@ -17,6 +17,10 @@ export class ProductDto {
   @IsNotEmpty()
   public price: number;
 
+  @IsInt()
+  @IsNotEmpty()
+  public category_id: number;
+
   @IsString()
   @IsNotEmpty()
   public status: string;

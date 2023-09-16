@@ -12,6 +12,7 @@ import {
   UsePipes,
   NotFoundException,
   Patch,
+  Query,
 } from '@nestjs/common';
 import { validate } from 'class-validator';
 import { ProductService } from './product.service';
@@ -23,8 +24,8 @@ export class ProductController {
   constructor(private readonly productService: ProductService) {}
 
   @Get()
-  findAll(): Promise<Product[]> {
-    return this.productService.findAll();
+  findAll(@Query() query) {
+    return this.productService.findAll(query);
   }
 
   @Get(':id')
