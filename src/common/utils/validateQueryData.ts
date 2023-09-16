@@ -4,7 +4,10 @@ export const validFilters = (query: Object, args) => {
   
     args.forEach(arg => {
 
-      if (Object.keys(query).some(i => arg.key.includes(i)))
+      if (
+        (Array.isArray(arg.key) && Object.keys(query).some(i => arg.key.includes(i))) ||
+        query[arg.key]
+      )
         filters = { ...filters, [arg.field]: { ...arg.where } }
 
     })

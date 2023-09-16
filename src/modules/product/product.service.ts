@@ -10,10 +10,11 @@ export class ProductService {
   constructor(private readonly prisma: PrismaService) { }
 
   async findAll(query: validArgs): Promise<PaginatedResult<Product>> {
-    const { page, per_page, order_by, category_id, price_from, price_to } = query
+    const { page, per_page, order_by, category_id, price_from, price_to, status } = query
 
     const filtersList = [
-      { key: ['category_id'], field: 'category_id', where: { equals: +category_id } },
+      { key: 'category_id', field: 'category_id', where: { equals: +category_id } },
+      { key: 'status', field: 'status', where: { equals: status } },
       { key: ['price_to', 'price_from'], field: 'price', where: { gte: +price_from || undefined, lte: +price_to || undefined } }
     ]
 

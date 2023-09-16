@@ -6,4 +6,5 @@ export interface validArgs {
     category_id?: number,
     price_from?: number,
     price_to?: number,
+    status?: string
   }
