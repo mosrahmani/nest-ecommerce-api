@@ -24,21 +24,20 @@ model User {
 
 // Product
 model Product {
-  id          Int            @id @default(autoincrement())
+  id          Int                @id @default(autoincrement())
   title       String
-  slug        String         @unique
+  slug        String             @unique
   quantity    Int
   price       Decimal
-  status      productStatus  @default(Available)
+  status      productStatus      @default(Available)
   description String
   views       Int?
-  properties  Json?
-  // categories  Category[] @relation(references: [id])
+  created_at  DateTime           @default(now())
+  updated_at  DateTime           @updatedAt
+  Category    Category?          @relation(fields: [category_id], references: [id])
+  category_id Int?
   photos      ProductPhoto[]
-  created_at  DateTime       @default(now())
-  updated_at  DateTime       @updatedAt
-  Category    Category?      @relation(fields: [category_id], references: [id])
-  category_id  Int?
+  arttibutes  ProductAttribute[]
 }
 
 enum productStatus {
@@ -62,6 +61,16 @@ model ProductPhoto {
   url        String
   productId  Int
   product    Product  @relation(fields: [productId], references: [id])
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+}
+
+model ProductAttribute {
+  id         Int      @id @default(autoincrement())
+  key        String
+  value      String
+  product    Product  @relation(fields: [productId], references: [id])
+  productId  Int
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 }
