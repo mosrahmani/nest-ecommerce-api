@@ -3,7 +3,7 @@
 
 datasource db {
   provider = "postgresql"
-  url      = "postgresql://postgres:1234@localhost:5432/ecommerce"
+  url      = "postgresql://postgres:admin@localhost:5432/ecommerce"
 }
 
 generator client {
@@ -47,13 +47,15 @@ enum productStatus {
 }
 
 model Category {
-  id         Int       @id @default(autoincrement())
-  name       String    @db.VarChar(100)
+  id         Int        @id @default(autoincrement())
+  name       String
+  slug       String @unique     
+  children   Category[] @relation("SubCategories")
+  parent     Category?  @relation("SubCategories", fields: [parent_id], references: [id])
+  parent_id  Int?
   products   Product[]
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
-
-  @@unique([name])
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
 }
 
 model ProductPhoto {

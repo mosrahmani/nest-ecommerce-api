@@ -6,9 +6,9 @@ import {
 } from '@nestjs/common';
 import { PrismaService } from '@prisma/prisma.service';
 import { Product } from '@prisma/client';
-import { validFilters, validOrders } from '@common/utils/validateQueryData';
+import { validFilters, validOrders } from '@common/utils/validateQueryData.util';
 import { validArgs } from './product.interface';
-import slugify from "slugify";
+import { slugifyForRoute } from '@common/utils/slugifyForRoute.util';
 
 @Injectable()
 export class ProductService {
@@ -88,10 +88,7 @@ export class ProductService {
         `Product with slug ${data.slug} already exist!`,
       );
 
-    data.slug = slugify(data.slug, {
-      lower: true,
-      remove: /[*+~=.()'"!/|\-_#$%^<>,.?;`:@]/g,
-    });
+    data.slug = slugifyForRoute(data.slug)
 
     return this.prisma.product.create({ data });
   }

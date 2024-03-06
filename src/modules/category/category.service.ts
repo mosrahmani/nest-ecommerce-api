@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from '@prisma/prisma.service';
 import { Category } from '@prisma/client';
+import { slugifyForRoute } from '@common/utils/slugifyForRoute.util';
 
 @Injectable()
 export class CategoryService {
@@ -8,10 +9,9 @@ export class CategoryService {
   
   async findAll() {
     return this.prisma.category.findMany({
-        select: {
-          id: true,
-          name: true,
-        }
+        include: {
+          children: true,
+        },
       });
   }
 
@@ -23,8 +23,15 @@ export class CategoryService {
   }
 
   async create(data: any): Promise<Category> {
-    const exist = await this.prisma.category.findUnique({ where: { name: data.name } })
-    if (exist) throw new BadRequestException(`Category with name ${data.name} already exist!`);
+    const exist = await this.prisma.category.findUnique({ where: { slug: data.slug } })
+    if (exist) throw new BadRequestException(`Category with slug ${data.slug} already exist!`);
+
+    data.slug = slugifyForRoute(data.slug)
+
+    if(data.parent_id){
+      const parentIdHasExist = await this.prisma.category.findUnique({ where: { id: data.parent_id } })
+      if (!parentIdHasExist) throw new BadRequestException(`Category with id ${data.parent_id} not found!`);
+    }
 
     return this.prisma.category.create({ data });
   }
@@ -32,6 +39,11 @@ export class CategoryService {
   async update(id: number, data: any): Promise<Category> {
     const exist = await this.prisma.category.findUnique({ where: { id } })
     if (!exist) throw new NotFoundException(`Category with ID ${id} not found!`);
+
+    if(data.parent_id){
+      const parentIdHasExist = await this.prisma.category.findUnique({ where: { id: data.parent_id } })
+      if (!parentIdHasExist) throw new BadRequestException(`Category with id ${data.parent_id} not found!`);
+    }
 
     return this.prisma.category.update({ where: { id }, data });
   }

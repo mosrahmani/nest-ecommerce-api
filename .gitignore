@@ -36,3 +36,4 @@ yarn.lock
 !.vscode/extensions.json
 
 src/prisma/migrations
+package-lock.json
