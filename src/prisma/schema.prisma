@@ -17,9 +17,10 @@ model BaseModel {
 }
 
 model User {
-  id       Int    @id @default(autoincrement())
+  id       String @id @default(uuid())
   email    String @unique
   password String
+  carts    Cart[]
 }
 
 // Product
@@ -38,6 +39,7 @@ model Product {
   category_id Int?
   photos      ProductPhoto[]
   arttibutes  ProductAttribute[]
+  cart_items  CartItem[]
 }
 
 enum productStatus {
@@ -49,7 +51,7 @@ enum productStatus {
 model Category {
   id         Int        @id @default(autoincrement())
   name       String
-  slug       String @unique     
+  slug       String     @unique
   children   Category[] @relation("SubCategories")
   parent     Category?  @relation("SubCategories", fields: [parent_id], references: [id])
   parent_id  Int?
@@ -75,4 +77,23 @@ model ProductAttribute {
   productId  Int
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
+}
+
+model Cart {
+  id         Int        @id @default(autoincrement())
+  user_id    String
+  user       User       @relation(fields: [user_id], references: [id])
+  items      CartItem[]
+  created_at DateTime   @default(now())
+  updated_at DateTime   @updatedAt
+}
+
+model CartItem {
+  cart_id    Int
+  product_id Int
+  cart       Cart    @relation(fields: [cart_id], references: [id])
+  product    Product @relation(fields: [product_id], references: [id])
+  quantity   Int
+
+  @@id([cart_id, product_id])
 }
