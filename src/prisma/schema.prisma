@@ -52,8 +52,8 @@ model Category {
   id         Int        @id @default(autoincrement())
   name       String
   slug       String     @unique
-  children   Category[] @relation("SubCategories")
-  parent     Category?  @relation("SubCategories", fields: [parent_id], references: [id])
+  children   Category[] @relation("sub_categories")
+  parent     Category?  @relation("sub_categories", fields: [parent_id], references: [id])
   parent_id  Int?
   products   Product[]
   created_at DateTime   @default(now())

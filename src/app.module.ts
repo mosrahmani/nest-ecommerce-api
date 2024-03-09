@@ -5,6 +5,7 @@ import { PrismaModule } from './prisma/prisma.module';
 import { ProductModule } from '@modules/product/product.module';
 import { CategoryModule } from '@modules/category/category.module';
 import AdminModule from '@modules/admin/admin.module';
+import { CartModule } from '@modules/cart/cart.module';
 
 @Module({
   imports: [
@@ -12,7 +13,7 @@ import AdminModule from '@modules/admin/admin.module';
     PrismaModule,
     ProductModule,
     CategoryModule,
-
+    CartModule,
   ],
   controllers: [AppController],
   providers: [AppService],
